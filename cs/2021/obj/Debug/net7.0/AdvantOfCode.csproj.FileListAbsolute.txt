@@ -1,0 +1,15 @@
+/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/bin/Debug/net7.0/AdvantOfCode
+/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/bin/Debug/net7.0/AdvantOfCode.deps.json
+/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/bin/Debug/net7.0/AdvantOfCode.runtimeconfig.json
+/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/bin/Debug/net7.0/AdvantOfCode.dll
+/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/bin/Debug/net7.0/AdvantOfCode.pdb
+/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/obj/Debug/net7.0/AdvantOfCode.csproj.AssemblyReference.cache
+/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/obj/Debug/net7.0/AdvantOfCode.GeneratedMSBuildEditorConfig.editorconfig
+/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/obj/Debug/net7.0/AdvantOfCode.AssemblyInfoInputs.cache
+/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/obj/Debug/net7.0/AdvantOfCode.AssemblyInfo.cs
+/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/obj/Debug/net7.0/AdvantOfCode.csproj.CoreCompileInputs.cache
+/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/obj/Debug/net7.0/AdvantOfCode.dll
+/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/obj/Debug/net7.0/refint/AdvantOfCode.dll
+/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/obj/Debug/net7.0/AdvantOfCode.pdb
+/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/obj/Debug/net7.0/AdvantOfCode.genruntimeconfig.cache
+/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/obj/Debug/net7.0/ref/AdvantOfCode.dll

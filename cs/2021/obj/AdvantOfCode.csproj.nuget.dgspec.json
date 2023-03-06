@@ -1,0 +1,61 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/AdvantOfCode.csproj": {}
+  },
+  "projects": {
+    "/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/AdvantOfCode.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/AdvantOfCode.csproj",
+        "projectName": "AdvantOfCode",
+        "projectPath": "/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/AdvantOfCode.csproj",
+        "packagesPath": "/home/valery/.nuget/packages/",
+        "outputPath": "/home/valery/RiderProjects/AdvantOfCode/AdvantOfCode/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/valery/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/7.0.200/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
