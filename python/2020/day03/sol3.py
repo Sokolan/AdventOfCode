@@ -4,11 +4,11 @@ main_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 sys.path.append(main_folder_path)
 import utils.helpers as util
 
-def count_trees_on_the_way(input, steps):
+def count_trees_on_the_way(input, steps_right, steps_down):
     pos = 0
     count = 0
-    for i in range(1, len(input)):
-        pos += 3
+    for i in range(steps_down, len(input),steps_down):
+        pos += steps_right
         pos %= len(input[0])
 
         if(input[i][pos] == '#'):
@@ -19,11 +19,20 @@ def count_trees_on_the_way(input, steps):
 def solve_part_one(input_path):
     input = util.parse_input(input_path)
     util.remove_newline_char(input)
-    return count_trees_on_the_way(input, 3)
+    return count_trees_on_the_way(input, 3, 1)
     
 
 def solve_part_two(input_path):
-    return
+    input = util.parse_input(input_path)
+    util.remove_newline_char(input)
+    count = 0
+    count += count_trees_on_the_way(input, 1, 1)
+    count *= count_trees_on_the_way(input, 3, 1)
+    count *= count_trees_on_the_way(input, 5, 1)
+    count *= count_trees_on_the_way(input, 7, 1)
+    count *= count_trees_on_the_way(input, 1, 2)
+
+    return count
 
 
 input_path = os.path.dirname(__file__)
