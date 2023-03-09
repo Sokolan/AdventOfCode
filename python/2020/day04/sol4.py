@@ -6,17 +6,48 @@ sys.path.append(main_folder_path)
 import utils.helpers as util
 
 
-def check_for_fields(passport, fields):
-    fields_copy = fields[:]
+def check_for_fields_existence(passport):
+    fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid", "cid"]
     for info in passport:
-        if info in fields_copy:
-            fields_copy.remove(info)
-    if(len(fields_copy) == 0):
+        if info in fields:
+            fields.remove(info)
+    if(len(fields) == 0):
         return True
-    elif(len(fields_copy) == 1 and fields_copy[0] == "cid"):
+    elif(len(fields) == 1 and fields[0] == "cid"):
         return True
     
     return False
+
+def check_if_fields_valid(passport):
+    if not (1920 <= int(passport["byr"]) <= 2002):
+        return False
+    if not (2010 <= int(passport["iyr"]) <= 2020):
+        return False
+    if not (2020 <= int(passport["eyr"]) <= 2030):
+        return False
+    cm = passport["hgt"].find("cm")
+    inc = passport["hgt"].find("in")
+    if (cm == -1 and inc == -1):
+        return False
+    if (cm != -1):
+        if not (150 <= int(passport["hgt"][0:cm]) <= 193):
+            return False
+    else: # inch != -1       
+        if not (59 <= int(passport["hgt"][0:inc]) <= 76):
+            return False
+    hlc = passport["hcl"]
+    if not (hlc[0] == '#' and len(hlc) == 7):
+        return False
+    for char in hlc[1:7]:
+        if not ('a' <= char <= 'f' or '0' <= char <= '9'):
+            return False
+    valic_eyc = ("amb", "blu", "brn", "gry", "grn", "hzl", "oth")
+    if not (passport["ecl"] in valic_eyc):
+        return False
+    pid = passport["pid"]
+    if not (len(pid) == 9):
+        return False
+    return True
 
 def fix_newlines(input):
     fixed_lines = []
@@ -51,19 +82,28 @@ def solve_part_one(input_path):
     input = fix_newlines(input)
     passports = create_passports(input)
     
-    fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid", "cid"]
-
     count = 0
     for i in range(0, len(passports)):
-        if(check_for_fields(passports[i], fields)):
+        if(check_for_fields_existence(passports[i])):
             count +=1
 
     return count
 
-    check_for_fields(passports, fields)
 
 def solve_part_two(input_path):
-    return
+    input = util.parse_input(input_path)
+    util.remove_newline_char(input)
+    input = fix_newlines(input)
+    passports = create_passports(input)
+    
+    count = 0
+    for i in range(0, len(passports)):
+        if(check_for_fields_existence(passports[i])):
+            if(check_if_fields_valid(passports[i])):
+                count +=1  
+
+
+    return count
 
 
 input_path = os.path.dirname(__file__)
@@ -81,7 +121,7 @@ else:
         f'Actual result: {res}')
 
 
-part_two_expected = ""
+part_two_expected = "2"
 res = solve_part_two(f'{input_path}/test.txt')
 
 print('\n')
