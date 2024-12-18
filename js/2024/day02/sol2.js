@@ -43,19 +43,37 @@ function checkReportValidity(report) {
       const distance =
         Number.parseInt(report[index]) - Number.parseInt(report[index - 1]);
       if (ascOrDesc === "asc") {
-        if (distance < 1 && distance > 3) return false;
+        if (distance < 1 || distance > 3) {
+          failIndex = index;
+          return false;
+        }
+        return true;
       }
-      return distance <= -1 && distance >= -3;
+      if (distance > -1 || distance < -3) {
+        failIndex = index;
+        return false;
+      }
+      return true;
     })
-  ) {
-    safeLists += 1;
-  }
+  )
+    return -1;
 }
 
 function solvePartTwo(inputPath) {
   const input = parseInput(inputPath);
   let safeLists = 0;
-  input.forEach((report) => {});
+  input.forEach((report) => {
+    if (
+      report.some(
+        (value, index) =>
+          checkReportValidity(
+            report.slice(0, index).concat(report.slice(index + 1))
+          ) === -1
+      )
+    ) {
+      safeLists += 1;
+    }
+  });
   return String(safeLists);
 }
 
