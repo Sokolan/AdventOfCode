@@ -38,24 +38,56 @@ function checkViolation(update, rules) {
   });
 }
 
+function findViolation(updates, rules) {
+  const violation = [];
+  for (let i = 0; i < updates.length; i += 1) {
+    for (let j = i + 1; j < updates.length; j += 1) {
+      if (
+        rules.find((rule) => rule[0] === updates[j] && rule[1] === updates[i])
+      ) {
+        return [i, j];
+      }
+    }
+  }
+  return [-1, -1];
+}
+
 function solvePartOne(inputPath) {
   const input = parseInput(inputPath);
   const rules = getRules(input);
-  const updates = getUpdates(input);
+  const updatesList = getUpdates(input);
   let middleSum = 0;
-  updates.forEach((update) => {
-    if (!checkViolation(update, rules)) return;
-    middleSum += Number.parseInt(update[Math.floor(update.length / 2)]);
+  updatesList.forEach((updates) => {
+    if (!checkViolation(updates, rules)) return;
+    middleSum += Number.parseInt(updates[Math.floor(updates.length / 2)]);
   });
   return String(middleSum);
 }
 
 function solvePartTwo(inputPath) {
   const input = parseInput(inputPath);
+  const rules = getRules(input);
+  const updates = getUpdates(input);
+  let middleSum = 0;
+  updates.forEach((update) => {
+    if (checkViolation(update, rules)) return;
+    const fixedUpdate = update;
+    do {
+      const violation = findViolation(update, rules);
+      [fixedUpdate[violation[1]], fixedUpdate[violation[0]]] = [
+        fixedUpdate[violation[0]],
+        fixedUpdate[violation[1]],
+      ];
+    } while (!checkViolation(fixedUpdate, rules));
+    middleSum += Number.parseInt(
+      fixedUpdate[Math.floor(fixedUpdate.length / 2)]
+    );
+  });
+  return String(middleSum);
 }
 
 const inputPath = __dirname;
 
 const partOneExpected = "143";
-const partTwoExpected = "";
+const partTwoExpected = "123";
 runner(solvePartOne, partOneExpected, solvePartTwo, partTwoExpected, inputPath);
