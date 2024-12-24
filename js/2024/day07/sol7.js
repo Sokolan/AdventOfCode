@@ -1,6 +1,5 @@
 const runner = require("../../utils/runner");
 const parseInput = require("../../utils/parseInput");
-const { count } = require("console");
 
 function getSumsAndNumbers(input) {
   const sums = [];
@@ -16,11 +15,10 @@ function isSumLegalRec(sum, accSum, index, numbersList) {
   if (index === numbersList.length) {
     return sum === accSum;
   }
-  if (isSumLegalRec(sum, accSum + numbersList[index], index + 1, numbersList))
-    return true;
-  if (isSumLegalRec(sum, accSum * numbersList[index], index + 1, numbersList))
-    return true;
-  return false;
+  return (
+    isSumLegalRec(sum, accSum + numbersList[index], index + 1, numbersList) ||
+    isSumLegalRec(sum, accSum * numbersList[index], index + 1, numbersList)
+  );
 }
 
 function isSumLegal(sum, numbersList) {
@@ -28,11 +26,11 @@ function isSumLegal(sum, numbersList) {
 }
 
 function countLegalSums(sums, numbersList) {
-  let legalSums = 0;
-  sums.forEach((sum, index) => {
-    if (isSumLegal(sum, numbersList[index])) legalSums += sum;
-  });
-  return legalSums;
+  return sums.reduce(
+    (accSum, sum, index) =>
+      isSumLegal(sum, numbersList[index]) ? (accSum += sum) : accSum,
+    0
+  );
 }
 
 function solvePartOne(inputPath) {

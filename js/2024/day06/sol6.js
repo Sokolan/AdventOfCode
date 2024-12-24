@@ -1,6 +1,5 @@
 const runner = require("../../utils/runner");
 const parseInput = require("../../utils/parseInput");
-const { dir } = require("console");
 
 const directionMap = {
   u: [-1, 0],

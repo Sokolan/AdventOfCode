@@ -1,6 +1,5 @@
 const runner = require("../../utils/runner");
 const parseInput = require("../../utils/parseInput");
-const { listenerCount } = require("process");
 
 function getRules(input) {
   const rules = [];
