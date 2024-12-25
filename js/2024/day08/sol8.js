@@ -1,25 +1,31 @@
 const runner = require("../../utils/runner");
 const parseInput = require("../../utils/parseInput");
+const { arrayBuffer } = require("stream/consumers");
 
-function getAnthenasLocationMap(locationMatrix) {
-  const anthenasLocations = {};
-  for (let row = 0; row < locationMatrix.length; row += 1) {
-    for (let column = 0; column < locationMatrix.length; column += 1) {
-      const anthenaType = locationMatrix[row][column];
-      if (anthenaType.match(/[0-9a-zA-Z]/)) {
-        if (!anthenasLocations[anthenaType]) {
-          anthenasLocations[anthenaType] = new Set();
+function getAntennasLocationMap(locationMatrix) {
+  const antennasLocations = new Map();
+  const boundary = locationMatrix.length;
+  for (let row = 0; row < boundary; row += 1) {
+    for (let column = 0; column < boundary; column += 1) {
+      const antennaType = locationMatrix[row][column];
+      if (antennaType.match(/[0-9a-zA-Z]/)) {
+        if (!antennasLocations.has(antennaType)) {
+          antennasLocations.set(antennaType, new Set());
         }
-        anthenasLocations[anthenaType].add([row, column]);
+        antennasLocations.get(antennaType).add([row, column]);
       }
     }
   }
-  return anthenasLocations;
+  return antennasLocations;
 }
 
-function calcAntinodeLocation(anthenaA, anthenaB) {
-  const [dy, dx] = [anthenaA[0] - anthenaB[0], anthenaA[1] - anthenaB[1]];
-  return [anthenaA[0] + dy, anthenaA[1] + dx];
+function calcAntinodeJump(antennaA, antennaB) {
+  return [antennaA[0] - antennaB[0], antennaA[1] - antennaB[1]];
+}
+
+function calcAntinodeLocation(antennaA, jump) {
+  const [dy, dx] = jump;
+  return [antennaA[0] + dy, antennaA[1] + dx];
 }
 
 function inBoundaries(location, boundaries) {
@@ -31,17 +37,33 @@ function inBoundaries(location, boundaries) {
   );
 }
 
-function addAntinodesLocations(
-  anthenasLocation,
+function addAntinodesLocationA(
+  antennaA,
+  antinodeJump,
+  boundaries,
+  antinodeLocationsSet
+) {
+  const antinodeLocation = calcAntinodeLocation(antennaA, antinodeJump);
+  if (!inBoundaries(antinodeLocation, boundaries)) return false;
+  antinodeLocationsSet.add(`${antinodeLocation}`);
+  return true;
+}
+
+function addAntinodesLocationsA(
+  antennasLocation,
   antinodeLocationsSet,
   boundaries
 ) {
-  anthenasLocation.forEach((anthenaA, indexA) => {
-    anthenasLocation.forEach((anthenaB, indexB) => {
+  antennasLocation.forEach((antennaA, indexA) => {
+    antennasLocation.forEach((antennaB, indexB) => {
       if (indexA === indexB) return;
-      const antinodeLocation = calcAntinodeLocation(anthenaA, anthenaB);
-      if (!inBoundaries(antinodeLocation, boundaries)) return;
-      antinodeLocationsSet.add(`${antinodeLocation}`);
+      const antinodeJump = calcAntinodeJump(antennaA, antennaB);
+      addAntinodesLocationA(
+        antennaA,
+        antinodeJump,
+        boundaries,
+        antinodeLocationsSet
+      );
     });
   });
 }
@@ -49,21 +71,76 @@ function addAntinodesLocations(
 function solvePartOne(inputPath) {
   const input = parseInput(inputPath);
   const locationMatrix = input.map((line) => [...line[0].trim().split("")]);
-  const anthenasLocationsMap = getAnthenasLocationMap(locationMatrix);
+  const antennasLocationsMap = getAntennasLocationMap(locationMatrix);
   const antinodesLocationsSet = new Set();
-  Object.values(anthenasLocationsMap).forEach((anthenasLocation) =>
-    addAntinodesLocations(anthenasLocation, antinodesLocationsSet, input.length)
+  antennasLocationsMap.forEach((antennasLocation) =>
+    addAntinodesLocationsA(
+      antennasLocation,
+      antinodesLocationsSet,
+      input.length
+    )
   );
   return String(antinodesLocationsSet.size);
 }
 
+function addAntinodesLocationB(
+  antennaA,
+  antinodeJump,
+  boundaries,
+  antinodeLocationsSet
+) {
+  let antenna = antennaA;
+  let antinodeLocation = calcAntinodeLocation(antenna, [0, 0]);
+  while (inBoundaries(antinodeLocation, boundaries)) {
+    antenna = antinodeLocation;
+    antinodeLocationsSet.add(`${antinodeLocation}`);
+    antinodeLocation = calcAntinodeLocation(antenna, antinodeJump);
+  }
+}
+
+function addAntinodesLocationsB(
+  antennasLocation,
+  antinodeLocationsSet,
+  boundaries
+) {
+  antennasLocation.forEach((antennaA, indexA) => {
+    antennasLocation.forEach((antennaB, indexB) => {
+      if (indexA === indexB) return;
+      const antinodeJump = calcAntinodeJump(antennaA, antennaB);
+      addAntinodesLocationB(
+        antennaA,
+        antinodeJump,
+        boundaries,
+        antinodeLocationsSet
+      );
+    });
+  });
+}
+
 function solvePartTwo(inputPath) {
   const input = parseInput(inputPath);
+  const locationMatrix = input.map((line) => [...line[0].trim().split("")]);
+  const antennasLocationsMap = getAntennasLocationMap(locationMatrix);
+  const antinodesLocationsSet = new Set();
+  antennasLocationsMap.forEach((antennasLocation) =>
+    addAntinodesLocationsB(
+      antennasLocation,
+      antinodesLocationsSet,
+      input.length
+    )
+  );
+  const arr = [];
+  antinodesLocationsSet.forEach((location) => {
+    arr.push(location.split(",").map((_) => Number.parseInt(_)));
+  });
+
+  return String(antinodesLocationsSet.size);
 }
 
 const inputPath = __dirname;
 
+// 413
 const partOneExpected = "14";
-const partTwoExpected = "";
+const partTwoExpected = "34";
 
 runner(solvePartOne, partOneExpected, solvePartTwo, partTwoExpected, inputPath);
