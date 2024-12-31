@@ -57,6 +57,38 @@ function countTrailheadsScores(topographicMap) {
   }, 0);
 }
 
+function trailheadRating(topographicMap, y, x, goalHeight) {
+  if (topographicMap[y][x] === goalHeight) return 1;
+  const rating = moves.reduce((acc, move) => {
+    const [newY, newX] = [move[0] + y, move[1] + x];
+    if (
+      !checkBoundaries(topographicMap, newY, newX) ||
+      topographicMap[newY][newX] - topographicMap[y][x] !== 1
+    )
+      return acc;
+    return acc + trailheadRating(topographicMap, newY, newX, goalHeight);
+  }, 0);
+  return rating;
+}
+
+function countTrailheadsRating(topographicMap) {
+  const startPoints = getStartLocations(topographicMap);
+
+  return startPoints.reduce((acc, currentStart) => {
+    const goalHeightSet = new Set();
+    return (
+      acc +
+      trailheadRating(
+        topographicMap,
+        currentStart.rowIndex,
+        currentStart.columnIndex,
+        9,
+        goalHeightSet
+      )
+    );
+  }, 0);
+}
+
 function solvePartOne(inputPath) {
   const input = parseInput(inputPath);
   const inputMatrix = input.map((_) =>
@@ -68,11 +100,16 @@ function solvePartOne(inputPath) {
 
 function solvePartTwo(inputPath) {
   const input = parseInput(inputPath);
+  const inputMatrix = input.map((_) =>
+    _[0].split("").map((_) => Number.parseInt(_))
+  );
+  const trailheadsScores = countTrailheadsRating(inputMatrix);
+  return String(trailheadsScores);
 }
 
 const inputPath = __dirname;
 
 const partOneExpected = "36";
-const partTwoExpected = "";
+const partTwoExpected = "81";
 
 runner(solvePartOne, partOneExpected, solvePartTwo, partTwoExpected, inputPath);
