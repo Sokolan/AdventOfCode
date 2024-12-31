@@ -75,15 +75,13 @@ function countTrailheadsRating(topographicMap) {
   const startPoints = getStartLocations(topographicMap);
 
   return startPoints.reduce((acc, currentStart) => {
-    const goalHeightSet = new Set();
     return (
       acc +
       trailheadRating(
         topographicMap,
         currentStart.rowIndex,
         currentStart.columnIndex,
-        9,
-        goalHeightSet
+        9
       )
     );
   }, 0);
