@@ -56,7 +56,6 @@ function calcChecksum(filesystemArr) {
         paddingIndex = pad;
       }
     }
-    const fsai = filesystemArr[index];
     position += filesystemArr[index];
     index += 1;
   }
@@ -69,13 +68,81 @@ function solvePartOne(inputPath) {
   return String(calcChecksum(inputArray));
 }
 
+function moveFile(filesystemArr, fileToMoveIndex, emptyIndex, fillData) {
+  while (emptyIndex < fileToMoveIndex) {
+    const toMoveFile = filesystemArr[fileToMoveIndex];
+
+    if (filesystemArr[emptyIndex] >= toMoveFile) {
+      if (!fillData[emptyIndex]) fillData[emptyIndex] = [];
+      fillData[emptyIndex].push({
+        fileID: fileToMoveIndex / 2,
+        size: toMoveFile,
+      });
+      fillData[fileToMoveIndex] = {
+        fileID: 0,
+        size: toMoveFile,
+      };
+      filesystemArr[emptyIndex] -= toMoveFile;
+      filesystemArr[fileToMoveIndex] = 0;
+      return;
+    }
+    emptyIndex += 2;
+  }
+}
+
+function filesMover(filesystemArr) {
+  const fillData = Array(Math.floor(filesystemArr.length)).fill(null);
+  let emptyIndex = 1;
+  let fileToMoveIndex =
+    (filesystemArr.length - 1) % 2 === 0
+      ? filesystemArr.length - 1
+      : filesystemArr.length - 2;
+  while (fileToMoveIndex > 0) {
+    moveFile(filesystemArr, fileToMoveIndex, emptyIndex, fillData);
+    if (filesystemArr[emptyIndex] === 0) {
+      emptyIndex += 2;
+    }
+    fileToMoveIndex -= 2;
+  }
+  return fillData;
+}
+
+function calcChecksumMoved(filesystemArr, fillData) {
+  let position = 0;
+  return (checkSum = filesystemArr.reduce((checkSum, currentBlock, index) => {
+    if (index % 2 === 0) {
+      if (fillData[index]) {
+        position += fillData[index].size;
+      }
+      checkSum += sumN(position, currentBlock) * (index / 2);
+      position += currentBlock;
+    } else {
+      if (!fillData[index]) {
+        position += filesystemArr[index];
+        return checkSum;
+      }
+      fillData[index].forEach((movedFile) => {
+        if (!movedFile) return;
+        checkSum += sumN(position, movedFile.size) * movedFile.fileID;
+        position += movedFile.size;
+      });
+      position += filesystemArr[index];
+    }
+    return checkSum;
+  }, 0));
+}
+
 function solvePartTwo(inputPath) {
-  const input = parseInput(inputPath);
+  const input = parseInput(inputPath)[0][0];
+  const inputArray = input.split("").map((_) => Number.parseInt(_));
+  const fillData = filesMover(inputArray);
+  const checkSum = calcChecksumMoved(inputArray, fillData);
+  return String(checkSum);
 }
 
 const inputPath = __dirname;
 
 const partOneExpected = "1928";
-const partTwoExpected = "";
+const partTwoExpected = "2858";
 
 runner(solvePartOne, partOneExpected, solvePartTwo, partTwoExpected, inputPath);
