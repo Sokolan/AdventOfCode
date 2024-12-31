@@ -59,7 +59,7 @@ function countTrailheadsScores(topographicMap) {
 
 function trailheadRating(topographicMap, y, x, goalHeight) {
   if (topographicMap[y][x] === goalHeight) return 1;
-  const rating = moves.reduce((acc, move) => {
+  return moves.reduce((acc, move) => {
     const [newY, newX] = [move[0] + y, move[1] + x];
     if (
       !checkBoundaries(topographicMap, newY, newX) ||
@@ -68,7 +68,6 @@ function trailheadRating(topographicMap, y, x, goalHeight) {
       return acc;
     return acc + trailheadRating(topographicMap, newY, newX, goalHeight);
   }, 0);
-  return rating;
 }
 
 function countTrailheadsRating(topographicMap) {
